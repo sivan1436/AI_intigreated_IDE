@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
+import proxy from "express-http-proxy";
 
 dotenv.config()
 
@@ -13,9 +14,11 @@ app.use(cors({
     credentials: true
 }))
 app.use(morgan('dev'));
+app.use("/auth", proxy(process.env.AUTH_SERVICE_URL))
 app.get('/', (req, res) => {
     res.json({'message': 'Hello World!'})
 })
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
