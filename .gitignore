@@ -3,3 +3,6 @@
 node_modules/
 .env
 ServiceAccount.json
+./FrontEnd/node_modules/**
+C:\Users\kiran kumar\OneDrive\Apps\Ai-intigrated-IDE\FrontEnd\.env
+C:\Users\kiran kumar\OneDrive\Apps\Ai-intigrated-IDE\FrontEnd\.env.example
