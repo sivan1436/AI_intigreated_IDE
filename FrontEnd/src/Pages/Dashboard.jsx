@@ -1,9 +1,30 @@
 import { FcGoogle } from "react-icons/fc";
-import react from 'react'
+import { signInWithPopup } from 'firebase/auth'
+import { auth, provider } from "../../Firebase.js";
+import { login } from '../Features/Login.js'
+import { useState } from 'react'
+import { useDispatch } from "react-redux";
+import {setUserData} from "../redux/userslice.js"
 
 
 
 function Dashboard() {
+  const [loading,setLoading] = useState(false)
+  const dispatch = useDispatch()
+    async function handleGoogleSignIn() {
+    try {
+      setLoading(true)
+      const { user } = await signInWithPopup(auth , provider)
+      const token = await user.getIdToken()
+      const Data = await login(token)
+      dispatch(setUserData(Data))
+      console.log(Data)
+    } catch (error) {
+      console.error('Google sign-in failed:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <div className='relative flex h-screen w-full items-center justify-center overflow-hidden
     bg-[#07070c] px-4 transition-colors duration-300'>
@@ -34,13 +55,16 @@ function Dashboard() {
       <p className='mb-6 text-[13.5px] leading-relaxed text-slate-300'>
         sign in to access your projects and continue building
       </p>
-      <button className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-200 bg-white py-2.5 text-[13.5]
+      <button disabled={loading}
+      onClick={handleGoogleSignIn}
+      className="flex w-full items-center justify-center gap-3 rounded-lg border border-slate-200 bg-white py-2.5 text-[13.5]
       font-medium text-slate-800 shadow-sm transition-colors
       duration-150 hover:bg-slate-50 disabled:opacity-70
       dark:border-transition dark:bg-white dark:hover:bg-slate-100">
-        <FcGoogle className="mr-2 inline-block text-lg" />
-       continue with google
+        <FcGoogle className="mr-2 inline-block text-lg cursor-pointer" />
+       {loading ? "Signing in..." : "continue with google"}
       </button>
+      <p className='mt-5 text-[11px] text-slate-400 dark:text-slate-600'>By continuing you agree to our terms and policy</p>
       </div>
 
     </div>
