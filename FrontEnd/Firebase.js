@@ -1,4 +1,4 @@
-import { getApp, getApps, initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
@@ -10,18 +10,6 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const missingConfig = Object.entries(firebaseConfig)
-  .filter(([, value]) => !value)
-  .map(([key]) => key);
-
-if (missingConfig.length > 0) {
-  throw new Error(
-    `Missing Firebase configuration: ${missingConfig.join(", ")}. ` +
-      "Copy .env.example to .env and fill in the Firebase web app values.",
-  );
-}
-
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-
-export const googleProvider = new GoogleAuthProvider();
-export const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app) ;
+export const provider = new GoogleAuthProvider();

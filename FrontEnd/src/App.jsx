@@ -1,15 +1,19 @@
 import { signInWithPopup } from 'firebase/auth'
-import { useState } from 'react'
-import { auth, googleProvider } from '../Firebase.js'
+import { auth, provider } from '../Firebase.js'
+import { login } from './Features/Login.js'
 
 function App() {
   
 
   async function handleGoogleSignIn() {
-
-    const data = signInWithPopup(auth,googleProvider)
-    console.log(data)
-    
+    try {
+      const { user } = await signInWithPopup(auth, provider)
+      const token = await user.getIdToken()
+      const loginData = await login(token)
+      console.log(loginData)
+    } catch (error) {
+      console.error('Google sign-in failed:', error)
+    }
   }
 
 
