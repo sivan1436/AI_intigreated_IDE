@@ -1,6 +1,8 @@
 import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../Firebase.js'
 import { login } from './Features/Login.js'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Dashboard from './Pages/Dashboard.jsx'
 
 function App() {
   
@@ -18,12 +20,11 @@ function App() {
 
 
   return (
-    <div>
-      <button  onClick={handleGoogleSignIn}>
-        continue with google
-      </button>
-     
-    </div>
+<BrowserRouter>
+<Routes>
+  <Route path='/' element ={<Dashboard/>}/>
+</Routes>
+</BrowserRouter>
   )
 }
 
