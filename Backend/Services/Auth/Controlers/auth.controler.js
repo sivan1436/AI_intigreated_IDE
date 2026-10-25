@@ -1,8 +1,8 @@
 import { app } from "../Config/Firebase.js";
 import { getAuth } from "firebase-admin/auth";
-import User from "../../User/Models/User.js";
+import User from "../Models/UserModel.js";
 import crypto from "crypto";
-import redis from "../../Config/Redis.js";
+import redis from "../../../Shared/redis.js";
 
 
 
@@ -22,16 +22,14 @@ export async function login(req, res) {
                 avatar: decoded.picture
             });
         }
-        const sessionID = crypto.randomUUID();
-        await redis.set(`session-${sessionID}`,
-            JSON.stringify({
-                name: user.name,
+            const currentUser = {
+                name : user.name,
                 userId: user._id,
                 email: user.email,
                 avatar: user.avatar
-            }), "EX", 7 * 24 * 60 * 60)
+            }
 
-        res.cookie("session", sessionID, {
+        res.cookie("session",currentUser, {
             httpOnly: true,
             secure: false,
             samesite: "strict",

@@ -16,6 +16,7 @@ await ConnectDB();
 const port = process.env.AUTH_PORT || 3000;
 const app = express()
 app.use(express.json())
+app.use(cookieParser())
 
 app.use("/", Authrouter)
 app.get('/', (req, res) => {
