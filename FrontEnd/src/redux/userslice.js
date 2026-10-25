@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const age = 0
 const userSlice = createSlice({
   name: 'user',
   initialState: {
