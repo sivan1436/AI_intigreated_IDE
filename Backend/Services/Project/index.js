@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import ConnectDB from "./Config/db.js";
 import dns from "node:dns";
+import router from "./Routes/ProjectRoutes.js";
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
     res.json({'message': 'Hello World! from Project Service'})
 })
 
+app.use('/project', router)
 app.listen(port, () => {
     console.log(`Project Server  is running on port ${port}`)
 })
