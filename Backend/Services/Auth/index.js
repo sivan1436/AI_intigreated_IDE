@@ -5,12 +5,12 @@ import cors from "cors";
 import morgan from "morgan";
 import dns from "node:dns";
 import ConnectDB from "./Config/db.js";
+import Authrouter from "./Routes/auth.Routes.js"
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 dotenv.config();
 
-const { default: Authrouter } = await import("./Routes/auth.Routes.js");
 
 await ConnectDB();
 

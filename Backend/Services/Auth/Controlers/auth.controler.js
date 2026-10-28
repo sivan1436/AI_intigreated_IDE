@@ -28,13 +28,21 @@ export async function login(req, res) {
                 email: user.email,
                 avatar: user.avatar
             }
-
-        res.cookie("session",currentUser, {
+            const sessionId = crypto.randomUUID().toString();
+            await redis.set(`session-${sessionId}`, JSON.stringify({
+                name : user.name,
+                _id : user._id,
+                email: user.email,
+                avatar: user.avatar
+            }
+            ), 'EX', 7 * 24 * 60 * 60); // Set session in Redis with expiration of 7 days
+    
+        res.cookie("sessionId", sessionId, {
             httpOnly: true,
             secure: false,
             samesite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000
-        })
+        });
 
         return res.status(200).json({ decoded });
 
