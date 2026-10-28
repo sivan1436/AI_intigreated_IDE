@@ -2,6 +2,8 @@
 ***/node_module/***
 node_modules/
 .env
+***.env 
+.env
 ServiceAccount.json
 ./FrontEnd/node_modules/**
 C:\Users\kiran kumar\OneDrive\Apps\Ai-intigrated-IDE\FrontEnd\.env

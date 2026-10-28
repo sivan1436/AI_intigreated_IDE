@@ -6,7 +6,7 @@ import morgan from "morgan";
 import proxy from "express-http-proxy";
 import { Protect } from "./Middleware/Protect.js";
 import { getCurrentUser } from "./Controlers/user.controler.js";
-
+import { ProxyWithHeader } from "./Utils/proxyWithHeader.js";
 dotenv.config();
 
 const port = process.env.PORT || 3000;
@@ -19,7 +19,7 @@ app.use(cors({
 }));
 app.use(morgan('dev'));
 app.use('/auth', proxy(process.env.AUTH_SERVICE_URL));
-app.use('/project', Protect, proxy(process.env.PROJECT_SERVICE_URL));
+app.use('/project', Protect, ProxyWithHeader(process.env.PROJECT_SERVICE_URL));
 app.get('/me', Protect, getCurrentUser);
 app.get('/', (req, res) => {
     res.json({ message: 'Hello World!' });
