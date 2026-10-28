@@ -1,3 +1,4 @@
+import redis from "../../../Shared/redis.js";
 import Project from "../Models/projectModel.js";
 
 
@@ -13,6 +14,10 @@ export async function CreateProject(req, res) {
         name,
         description
       })
+    const key = `projects-${userId}`;
+    await redis.del(key)
+         
+
       return res.status(201).json(project);
     }
     catch(error){
@@ -27,8 +32,13 @@ export async function getProjects(req, res) {
       if(!userId) {
         return res.status(401).json({ message: "User ID not Required" });
       }
+      const key = `projects-${userId}`;
+      let result = await redis.get(key)
+      if (result){
+        return res.status(201).json(JSON.parse(result));
+      }
      const projects = await Project.find({ owner : userId }).sort({updatedAt:-1});
-
+      await redis.set(key,JSON.stringify(projects))
       return res.status(201).json(projects);
     }
     catch(error){
@@ -58,10 +68,17 @@ export async function StarredProjects(req, res) {
       if(!userId) {
         return res.status(401).json({ message: "User ID not Required" });
       }
+    const key = `starred-projects-${userId}`;
+    const result = await redis.get(key)
+    if(result){
+        return res.status(200).json(JSON.parse(result))
+    }
+
      const projects = await Project.find({ owner : userId ,
         starred : true
      }).sort({updatedAt:-1});
-
+     
+     await redis.set(key,JSON.stringify(projects))
       return res.status(201).json(projects);
     }
     catch(error){
@@ -84,6 +101,8 @@ export async function ToggleStar(req, res) {
             return res.status(404).json({ message: "Project not found" });
         }
         project.starred = !project.starred;
+        const key = `starred-projects-${userId}`;
+        await redis.del(key)
         await project.save();
         return res.status(200).json({ message: "Project starred status updated" });
 
@@ -95,6 +114,7 @@ export async function ToggleStar(req, res) {
 
 export async function DeleteProject(req, res) {
     try {
+        const userId = req.headers['x-user-id'];
         const { id } = req.params;
         if (!id) {
             return res.status(400).json({ message: "Project ID not provided" });
@@ -103,6 +123,9 @@ export async function DeleteProject(req, res) {
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
+        const key = `projects-${userId}`;
+        await redis.del(key)
+
         return res.status(200).json({ message: "Project deleted successfully" });
     }
     catch(error){
