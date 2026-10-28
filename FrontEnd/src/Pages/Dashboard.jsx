@@ -3,7 +3,7 @@ import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from "../../Firebase.js";
 import { login } from '../Features/Login.js'
 import { useState } from 'react'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {setUserData} from "../redux/userslice.js"
 
 
@@ -11,6 +11,7 @@ import {setUserData} from "../redux/userslice.js"
 function Dashboard() {
   const [loading,setLoading] = useState(false)
   const dispatch = useDispatch()
+  const {userData} = useSelector(state=>state.user)
     async function handleGoogleSignIn() {
     try {
       setLoading(true)
@@ -25,6 +26,7 @@ function Dashboard() {
       setLoading(false)
     }
   }
+  if (!userData) {
   return (
     <div className='relative flex h-screen w-full items-center justify-center overflow-hidden
     bg-[#07070c] px-4 transition-colors duration-300'>
@@ -70,6 +72,12 @@ function Dashboard() {
     </div>
 
   )
+}
+return (
+  <div>
+  
+  </div>
+)
 }
 
 export default Dashboard
