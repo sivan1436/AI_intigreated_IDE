@@ -21,5 +21,11 @@ const projectSchema = new mongoose.Schema({
     lastModified : {
         type : Date,
         default : Date.now
-    },
+    }
+},{
+    timestamps : true
 })
+
+const Project = mongoose.model("Project", projectSchema);
+
+export default Project;
