@@ -7,6 +7,6 @@ export async function Me() {
         return data;
     } catch (err) {
         console.error('Failed to fetch current user:', err);
-        return { error: 'Internal Server Error' };
+        return null;
     }
 }
