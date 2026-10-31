@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { FiMoon } from "react-icons/fi";
+import { FiChevronDown, FiLogOut, FiMoon } from "react-icons/fi";
 import { IoIosSunny } from "react-icons/io";
 import { useSelector } from "react-redux";
+import { logOut } from '../Features/logout';
 
 
 function NavBar() {
@@ -14,7 +15,10 @@ function NavBar() {
   const name = userData?.name || "Guest"
 
   const initials = name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()
-
+ async function HandleLogOut() {
+  await logOut()
+  
+ }
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -46,7 +50,7 @@ function NavBar() {
           {isDark ? <FiMoon size={18} /> : <IoIosSunny size={20} />}
         </button>
         <div className='relative ml-1'>
-          <button onClick={()=>manuOpen(p=>!p)}
+          <button onClick={()=>setManuOpen(p=>!p)}
           className='flex items-center gap-2 pl-1.5 pr-2 h-10 rounded-lg hover:bg-slate-100
         dark:hover:bg-white/[0.06] transition-colors duration'>
             <div className='w-8 h-8 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-200
@@ -54,10 +58,36 @@ function NavBar() {
               <span className='text-[12px] font-semibold text-white dark:text-slate-900'>
                 {initials}
               </span>
-              <span>{name}</span>
             </div>
+            <span className='text-[13.5px] font-medium text-slate-700 dark:text-slate-200 hidden sm:inline'>{name}</span>
+              <FiChevronDown size={14} 
+              className={`text-slate-400 dark:text-slate-500 transition-transform duration-150 ${manuOpen ? "rotate-180" : ""}`} />
           </button>
-
+{manuOpen &&(
+  <div className='absolute right-0 mt-2 w-52 bg-white/95 dark:bg-[#12121c]/95 backdrop-blur-xl border border-slate-200 dark:border-white/[0.08] rounded-xl
+  shadow-xl py-1.5 z-50 animate-[fadeIn_0.15s_ease_out'>
+   <div className='px-3.5 py-2.5 border-b border-slate-100 dark:border-white/[0.06]
+   flex items-cnter gap-2.5'>
+    <div className='w-8 h-8 rounded-full bg-gradient-to-br from-slate-600 to-slate-700
+    dark:from-slate-200 dark:to-white flex items-center justify-center shrink-0 ring-2 ring-black/5 dark:ring-white/20'>
+     <span className='text-[12px] font-semibold text-white dark:text-slate-900'>
+      {initials}</span>
+    </div>
+     <div min-w-0>  
+      <p className='text-[11px] font-medium text-slate-800 dark:text-slate-200
+      truncate'>{name}</p>
+      <p className='text-[11px] text-slate-400 dark:text-slate-500 truncate'>
+        {userData?.email}</p>
+     </div>
+    </div>
+        <button onClick={HandleLogOut}
+        className='w-full flex items-center gap-2.5 px-3.5 py-2 text-[13px] text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10
+    transition-colors duration-150'>
+      <FiLogOut size={15}/>
+      Logout
+    </button>
+     </div>
+)}
         </div>
       </div>
     </div>
