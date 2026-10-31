@@ -44,7 +44,7 @@ export async function login(req, res) {
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-        return res.status(200).json({ decoded });
+        return res.status(200).json(currentUser);
 
     }
     catch (err) {
@@ -58,9 +58,11 @@ export async function login(req, res) {
 
 export async function LogOut(req, res) {
     try {
-        const sessionId = req.cookies?.session
-        await redis.del(`session-${sessionId}`)
-        res.clearCookie("session");
+        const sessionId = req.cookies?.sessionId
+        if (sessionId) {
+            await redis.del(`session-${sessionId}`)
+        }
+        res.clearCookie("sessionId");
         return res.status(200).json({ message: "Logged out successfully" });
     }
     catch (error) {

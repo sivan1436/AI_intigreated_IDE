@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { FiChevronDown, FiLogOut, FiMoon } from "react-icons/fi";
 import { IoIosSunny } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData } from "../redux/userslice.js";
 import { logOut } from '../Features/logout';
 
 
@@ -12,12 +13,16 @@ function NavBar() {
     return window.localStorage.getItem("theme") !== "light"
   })
   const { userData } = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const name = userData?.name || "Guest"
 
   const initials = name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()
  async function HandleLogOut() {
-  await logOut()
-  
+  const result = await logOut()
+  if (!result?.error) {
+    dispatch(setUserData(null))
+    setManuOpen(false)
+  }
  }
 
   useEffect(() => {
